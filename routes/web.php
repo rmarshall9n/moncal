@@ -18,4 +18,6 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['admin'], 'namespace' => 'Admin'], function() {
    CRUD::resource('transaction', 'TransactionCrudController');
+   CRUD::resource('recurring-transaction', 'RecurringTransactionCrudController');
+   CRUD::resource('bank-account', 'BankAccountCrudController');
 });
