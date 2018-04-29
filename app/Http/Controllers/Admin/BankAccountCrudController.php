@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
-use App\Http\Requests\RecurringTransactionRequest as StoreRequest;
-use App\Http\Requests\RecurringTransactionRequest as UpdateRequest;
+use App\Http\Requests\BankAccountRequest as StoreRequest;
+use App\Http\Requests\BankAccountRequest as UpdateRequest;
 
-class RecurringTransactionCrudController extends CrudController
+class BankAccountCrudController extends CrudController
 {
     public function setup()
     {
@@ -18,9 +18,9 @@ class RecurringTransactionCrudController extends CrudController
         | BASIC CRUD INFORMATION
         |--------------------------------------------------------------------------
         */
-        $this->crud->setModel('App\Models\RecurringTransaction');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/recurring-transaction');
-        $this->crud->setEntityNameStrings('recurring transaction', 'recurring transactions');
+        $this->crud->setModel('App\Models\BankAccount');
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/bank-account');
+        $this->crud->setEntityNameStrings('bank account', 'bank accounts');
 
         /*
         |--------------------------------------------------------------------------
@@ -28,81 +28,17 @@ class RecurringTransactionCrudController extends CrudController
         |--------------------------------------------------------------------------
         */
 
+
         // ------ CRUD FIELDS
         $this->crud->addField([
             'name' => 'name',
-            'label' => 'Name',
-        ]);
-
-        $this->crud->addField([
-            'name' => 'in_out',
-            'label' => "Transaction Type",
-            'type' => 'select_from_array',
-            'options' => [-1 => 'Expense', 1 => 'Income'],
-            'allows_null' => false,
-            'default' => -1,
-        ], 'create');
-
-        $this->crud->addField([
-            'name' => 'amount',
-            'label' => 'Amount',
-            'type' => 'number',
-        ]);
-
-        $this->crud->addField([
-            'name' => 'start_on',
-            'label' => 'Start On',
-            'type' => 'date_picker'
-        ]);
-
-        $this->crud->addField([
-            'name' => 'repeat_increment',
-            'label' => 'Repeat Increment',
-            'type' => 'number',
-        ]);
-
-        $this->crud->addField([
-            'name' => 'repeat_type',
-            'label' => "Repeat Type",
-            'type' => 'select_from_array',
-            'options' => [
-                'd' => 'Day',
-                'w' => 'Week',
-                'm' => 'Month',
-                'y' => 'Year',
-            ],
-            'allows_null' => false,
-            'default' => 'm',
-        ]);
-
-        $this->crud->addField([
-            'name' => 'num_repeats',
-            'label' => 'Number of repeats',
-            'type' => 'number',
-        ]);
-
-        $this->crud->addField([
-            'name' => 'end_on',
-            'label' => 'End On',
-            'type' => 'date_picker'
+            'label' => 'Account Name',
         ]);
 
         // ------ CRUD COLUMNS
         $this->crud->addColumn([
             'name' => 'name',
-            'label' => 'Name',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'amount',
-            'label' => 'Amount',
-            'type' => 'number',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'start_on',
-            'label' => 'Start On',
-            'type' => 'datetime'
+            'label' => 'Account Name',
         ]);
 
         // ------ CRUD BUTTONS
