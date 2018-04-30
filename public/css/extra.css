@@ -1,0 +1,40 @@
+.calendar .cal-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  width: 100%;
+}
+
+.calendar .cal-row .cal-col {
+  padding: 5px 10px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.calendar .cal-row .cal-cell {
+  -webkit-box-shadow: -1px -1px #00a65a, inset -1px -1px 0 0 #00a65a;
+          box-shadow: -1px -1px #00a65a, inset -1px -1px 0 0 #00a65a;
+  min-height: 80px;
+}
+
+.calendar .cal-row .cal-head {
+  text-align: center;
+}
+
+.calendar .cal-row .cell-secondary {
+  background-color: #d2d6de;
+}
+
+.calendar .cal-row .cell-primary {
+  background-color: #008d4c;
+  color: #fff;
+}
+
