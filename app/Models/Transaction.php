@@ -46,6 +46,32 @@ class Transaction extends Model
         parent::boot();
     }
 
+    public function getCalendarData()
+    {
+        return [
+            'date_id' => $this->made_on->format('dmY'),
+            'data' => [
+                'value' => $this->amount,
+            ]
+        ];
+    }
+
+    public static function getCumulativeBalances($startDate, $endDate)
+    {
+        return \DB::table('transactions')
+            ->select(\DB::raw('distinct(transactions.made_on), sum(cumulative.amount) as balance'))
+            ->leftJoin('transactions as cumulative', function($join) {
+                $join->on('transactions.made_on', '>=', 'cumulative.made_on');
+                $join->on('cumulative.user_id', '=', \DB::raw(\Auth::id()));
+            })
+            ->groupBy('transactions.id')
+            ->where([
+                ['transactions.made_on', '>=', $startDate],
+                ['transactions.made_on', '<=', $endDate],
+            ])
+            ->orderBy('transactions.made_on')
+            ->get();
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

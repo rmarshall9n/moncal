@@ -12,6 +12,11 @@
         .cal-cell {
             box-shadow: -1px -1px #00a65a, inset -1px -1px 0 0 #00a65a;
             min-height: 80px;
+
+            .total {
+                border-top: 1px solid #00a65a;
+                text-align: right;
+            }
         }
         .cal-head {
             text-align: center;

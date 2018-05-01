@@ -10,6 +10,13 @@ class Calendar
 {
     public $display;
     public $date;
+
+    public $items;
+    public $balances;
+
+    public $start_date;
+    public $end_date;
+
     // public $currentDate;
     // public $startDate;
     // public $endDate;
@@ -28,6 +35,27 @@ class Calendar
         }
 
         $this->display = in_array($display, ['d', 'w', 'm', 'y']) ? $display : 'm';
+
+        $date = $this->date->copy()->startOfMonth()->startOfWeek();
+        $this->start_date = $date->copy();
+        $month = $this->date->format('n');
+
+        $this->dates = [];
+
+        for ($i=0; $date->format('n') <= $month; $i++) {
+            for ($j = 0; $j < 7; $j++) {
+                $this->dates[$i][] = [
+                    'date_id' => $date->format('dmY'),
+                    'day' => $date->format('d'),
+                    'in_range' => $date->format('n') == $month,
+                    'today' => $date->eq(Carbon::today()),
+                ];
+
+                $date->addDay();
+            }
+        }
+
+        $this->end_date = $date->subDay()->copy();
     }
 
     public function getHeadings()
@@ -39,24 +67,7 @@ class Calendar
 
     public function getDates()
     {
-        $date = $this->date->copy()->startOfMonth()->startOfWeek();
-        $month = $this->date->format('n');
-
-        $dates = [];
-
-        for ($i=0; $date->format('n') <= $month; $i++) {
-            for ($j = 0; $j < 7; $j++) {
-                $dates[$i][] = [
-                    'date' => $date->format('d'),
-                    'in_range' => $date->format('n') == $month,
-                    'today' => $date->eq(Carbon::today()),
-                ];
-
-                $date->addDay();
-            }
-        }
-
-        return $dates;
+        return $this->dates;
     }
 
     public function navigate($action)
@@ -70,8 +81,29 @@ class Calendar
         }
     }
 
+    public function getItems($date_id)
+    {
+        return $this->items[$date_id] ?? [];
+    }
 
+    public function addItems($items)
+    {
+        foreach ($items as $item) {
 
+            $data = $item->getCalendarData();
+            $this->items[$data['date_id']][] = $data['data'];
+        }
+    }
+
+    public function addBalances($balances)
+    {
+        foreach ($balances as $balance) {
+            $date = Carbon::parse($balance->made_on)->format('dmY');
+            $this->balances[$date] = [
+                'value' => $balance->balance,
+            ];
+        }
+    }
 
 
     // public function getOpeningBalance()

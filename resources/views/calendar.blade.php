@@ -18,6 +18,11 @@
 
 @section('content')
 
+<style>
+    .total {
+        border-top: 1px solid black;
+    }
+</style>
     <div class="row">
         <div class="col-md-12">
             <div class="box box-default">
@@ -40,22 +45,36 @@
                 <div class="box-body">
 
                     <div class="calendar">
+
                         <div class="cal-row">
                             @foreach($calendar->getHeadings() as $heading)
                                 <div class="cal-col cal-head">{{ $heading }}</div>
                             @endforeach
                         </div>
+
                         @foreach($calendar->getDates() as $row)
                             <div class="cal-row">
                                 @foreach($row as $cell)
 
-                                    <div class="cal-col cal-cell{{ $cell['today'] ? ' cell-primary' : '' }}{{ $cell['in_range'] ? '' : ' cell-secondary' }}">{{ $cell['date'] }}</div>
+                                    <div class="cal-col cal-cell{{ $cell['today'] ? ' cell-primary' : '' }}{{ $cell['in_range'] ? '' : ' cell-secondary' }}">
+
+                                        <div class="date">{{ $cell['day'] }}</div>
+
+                                        @foreach($calendar->getItems($cell['date_id']) as $item)
+                                            <div><span class="fa {{ $item['value'] > 0 ? 'fa-arrow-right text-success' : 'fa-arrow-left text-danger' }}"></span> {{ $item['value'] }}</div>
+                                        @endforeach
+
+                                        @isset($calendar->balances[$cell['date_id']])
+                                            <div class="total">{{ $calendar->balances[$cell['date_id']]['value'] }}</div>
+                                        @endisset
+
+                                    </div>
 
                                 @endforeach
                             </div>
                         @endforeach
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
