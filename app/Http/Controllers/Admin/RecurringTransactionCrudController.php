@@ -79,6 +79,7 @@ class RecurringTransactionCrudController extends CrudController
             'name' => 'num_repeats',
             'label' => 'Number of repeats',
             'type' => 'number',
+            'default' => 1,
         ]);
 
         $this->crud->addField([
@@ -166,6 +167,7 @@ class RecurringTransactionCrudController extends CrudController
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
+
         return $redirect_location;
     }
 

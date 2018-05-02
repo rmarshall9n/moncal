@@ -26,7 +26,14 @@ class RecurringTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required',
+            'amount' => 'required|numeric',
+            'repeat_increment' => 'numeric',
+            'repeat_type' => 'required',
+            'num_repeats' => 'required',
+            'start_on' => 'required|date_format:Y-m-d',
+            // 'account_id' => 'required',
+            'user_id' => 'sometimes|required',
         ];
     }
 
