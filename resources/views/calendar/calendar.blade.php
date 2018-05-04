@@ -29,15 +29,7 @@
                 <div class="box-header with-border">
                     <div class="box-title">
 
-
-                        <form action="/calendar">
-                            <input type="hidden" name="date" value="{{ $calendar->date->format('dmY') }}">
-                            <input type="hidden" name="display" value="{{ $calendar->display }}">
-
-                            <button name="navigate" value="today" class="btn btn-primary">Today</button>
-                            <button name="navigate" value="prev" class="btn btn-primary">Prev</button>
-                            <button name="navigate" value="next" class="btn btn-primary">Next</button>
-                        </form>
+                        @include('calendar.navigation')
 
                     </div>
                 </div>
@@ -52,7 +44,7 @@
                             @endforeach
                         </div>
 
-                        @foreach($calendar->getDates() as $row)
+                        @foreach($calendar->dates as $row)
                             <div class="cal-row">
                                 @foreach($row as $cell)
 
@@ -60,12 +52,12 @@
 
                                         <div class="date">{{ $cell['day'] }}</div>
 
-                                        @foreach($calendar->getItems($cell['date_id']) as $item)
-                                            <div><span class="fa {{ $item['value'] > 0 ? 'fa-arrow-right text-success' : 'fa-arrow-left text-danger' }}"></span> {{ $item['value'] }}</div>
+                                        @foreach($calendar->getEvents($cell['date_id']) as $event)
+                                            <div><span class="fa {{ $event->value > 0 ? 'fa-arrow-right text-success' : 'fa-arrow-left text-danger' }}"></span> {{ $event->value }}</div>
                                         @endforeach
 
-                                        @isset($calendar->balances[$cell['date_id']])
-                                            <div class="total">{{ $calendar->balances[$cell['date_id']]['value'] }}</div>
+                                        @if($balance = $calendar->getBalance($cell['date_id']))
+                                            <div class="total">{{ $balance->value }}</div>
                                         @endisset
 
                                     </div>
@@ -79,4 +71,6 @@
             </div>
         </div>
     </div>
+
+    @dump($calendar)
 @endsection

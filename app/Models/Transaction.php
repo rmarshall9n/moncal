@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Event;
+use App\Interfaces\Eventable;
 use Backpack\CRUD\CrudTrait;
+use Illuminate\Database\Eloquent\Model;
 
-class Transaction extends Model
+class Transaction extends Model implements Eventable
 {
     use CrudTrait;
 
@@ -46,14 +48,9 @@ class Transaction extends Model
         parent::boot();
     }
 
-    public function getCalendarData()
+    public function getEvent()
     {
-        return [
-            'date_id' => $this->made_on->format('dmY'),
-            'data' => [
-                'value' => $this->amount,
-            ]
-        ];
+        return new Event($this->made_on, $this->amount);
     }
 
     public static function getCumulativeBalances($startDate, $endDate)

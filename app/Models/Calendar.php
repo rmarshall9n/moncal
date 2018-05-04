@@ -11,41 +11,57 @@ class Calendar
     public $display;
     public $date;
 
-    public $items;
+    public $events;
     public $balances;
 
     public $start_date;
     public $end_date;
 
-    // public $currentDate;
-    // public $startDate;
-    // public $endDate;
-    // public $nextDate;
-    // public $prevDate;
+    public $dates;
 
-    // private $openingBalance;
-    // private $closingBalance;
+    public function __construct($date, $display) {
 
-    public function __construct($date, $display)
-    {
+        // attempt to set a valid date
         try {
-            $this->date = $date == null ? Carbon::today() : Carbon::createFromFormat('dmY', $date);
+            $this->date = Carbon::createFromFormat('Ymd', $date);
         } catch (\Exception $e) {
             $this->date = Carbon::today();
         }
 
+        // set the display view
         $this->display = in_array($display, ['d', 'w', 'm', 'y']) ? $display : 'm';
+    }
 
-        $date = $this->date->copy()->startOfMonth()->startOfWeek();
-        $this->start_date = $date->copy();
-        $month = $this->date->format('n');
+    public function navigate($action)
+    {
+        if ($action == 'today') {
+            $this->date = Carbon::today();
+        } if ($action == 'next') {
+            $this->date->addMonthNoOverflow();
+        } else if ($action == 'prev') {
+            $this->date->subMonthNoOverflow();
+        }
+    }
+
+    public function setupDates()
+    {
+        // the first day of the starting week
+        $this->start_date = $this->date
+            ->copy()
+            ->startOfMonth()
+            ->startOfWeek();
 
         $this->dates = [];
 
-        for ($i=0; $date->format('n') <= $month; $i++) {
-            for ($j = 0; $j < 7; $j++) {
-                $this->dates[$i][] = [
-                    'date_id' => $date->format('dmY'),
+        $date = $this->start_date->copy();
+        $month = $this->date->format('n');
+        $week = 0;
+
+        // figure out all the days and add some meta data
+        do {
+            for ($day = 0; $day < 7; $day++) {
+                $this->dates[$week][] = [
+                    'date_id' => $date->format('Ymd'),
                     'day' => $date->format('d'),
                     'in_range' => $date->format('n') == $month,
                     'today' => $date->eq(Carbon::today()),
@@ -53,7 +69,10 @@ class Calendar
 
                 $date->addDay();
             }
-        }
+
+            $week++;
+
+        } while ($date->format('n') == $month);
 
         $this->end_date = $date->subDay()->copy();
     }
@@ -65,110 +84,29 @@ class Calendar
         ];
     }
 
-    public function getDates()
+    public function getEvents($date_id)
     {
-        return $this->dates;
+        return $this->events[$date_id] ?? [];
     }
 
-    public function navigate($action)
+    public function getBalance($date_id)
     {
-        if ($action == 'today') {
-            $date = Carbon::today();
-        } if ($action == 'next') {
-            $this->date->addMonthNoOverflow();
-        } else if ($action == 'prev') {
-            $this->date->subMonthNoOverflow();
-        }
+        return $this->balances[$date_id] ?? null;
     }
 
-    public function getItems($date_id)
-    {
-        return $this->items[$date_id] ?? [];
-    }
-
-    public function addItems($items)
+    public function addEvents($items)
     {
         foreach ($items as $item) {
-
-            $data = $item->getCalendarData();
-            $this->items[$data['date_id']][] = $data['data'];
+            $event = $item->getEvent();
+            $this->events[(int)$event->dateId()][] = $event;
         }
     }
 
     public function addBalances($balances)
     {
         foreach ($balances as $balance) {
-            $date = Carbon::parse($balance->made_on)->format('dmY');
-            $this->balances[$date] = [
-                'value' => $balance->balance,
-            ];
+            $event = new Event($balance->made_on, $balance->balance);
+            $this->balances[$event->dateId()] = $event;
         }
     }
-
-
-    // public function getOpeningBalance()
-    // {
-    //     return $this->openingBalance;
-    // }
-
-    // public function getClosingBalance()
-    // {
-    //     return $this->closingBalance;
-    // }
-
-
-    // public function getTransactions()
-    // {
-    //     // TODO: filter by RT complete flag (to be created)
-    //     return Transaction::where('transactions.made_on', '>=', $this->startDate)
-    //         ->where('transactions.made_on', '<=', $this->endDate)
-    //         ->where('transactions.user_id', Auth::id())
-    //         ->withCumulativeBalance()
-    //         ->orderBy('transactions.made_on', 'ASC')
-    //         ->get();
-    // }
-
-    // private function setupBalances()
-    // {
-    //     $this->openingBalance = Transaction::where('made_on', '<', $this->startDate)
-    //         ->sum('amount');
-
-    //     $this->closingBalance = Transaction::where('made_on', '<=', $this->endDate)
-    //         ->sum('amount');
-    // }
-
-    // private function setupDates()
-    // {
-    //     // TODO: this feels clunky
-    //     switch ($this->display) {
-    //         case 'd':
-    //             $this->startDate = $this->currentDate->copy();
-    //             $this->endDate = $this->currentDate->copy()->tomorrow();
-    //             $this->nextDate = $this->currentDate->copy()->addDay();
-    //             $this->prevDate = $this->currentDate->copy()->subDay();
-    //             break;
-
-    //         case 'w':
-    //             $this->startDate = $this->currentDate->copy()->startOfWeek();
-    //             $this->endDate = $this->currentDate->copy()->endOfWeek();
-    //             $this->nextDate = $this->currentDate->copy()->addWeek();
-    //             $this->prevDate = $this->currentDate->copy()->subWeek();
-    //             break;
-
-    //         case 'y':
-    //             $this->startDate = $this->currentDate->copy()->startOfYear();
-    //             $this->endDate = $this->currentDate->copy()->endOfYear();
-    //             $this->nextDate = $this->currentDate->copy()->addYear();
-    //             $this->prevDate = $this->currentDate->copy()->subYear();
-    //             break;
-
-    //         case 'm':
-    //         default:
-    //             $this->startDate = $this->currentDate->copy()->startOfMonth();
-    //             $this->endDate = $this->currentDate->copy()->endOfMonth();
-    //             $this->nextDate = $this->currentDate->copy()->addMonth();
-    //             $this->prevDate = $this->currentDate->copy()->subMonth();
-    //             break;
-    //     }
-    // }
 }
