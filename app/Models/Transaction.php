@@ -50,7 +50,7 @@ class Transaction extends Model implements Eventable
 
     public function getEvent()
     {
-        return new Event($this->made_on, $this->amount);
+        return new Event($this->made_on, $this->amount, $this->name);
     }
 
     public static function getCumulativeBalances($startDate, $endDate)

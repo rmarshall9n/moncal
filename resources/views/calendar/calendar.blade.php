@@ -4,6 +4,14 @@
     <link rel="stylesheet" href="{{ asset('css/extra.css') }}">
 @endsection
 
+@section('after_scripts')
+    <script type="text/javascript">
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+@endsection
+
 @section('header')
     <section class="content-header">
       <h1>
@@ -17,12 +25,6 @@
 @endsection
 
 @section('content')
-
-<style>
-    .total {
-        border-top: 1px solid black;
-    }
-</style>
     <div class="row">
         <div class="col-md-12">
             <div class="box box-default">
@@ -53,7 +55,11 @@
                                         <div class="date">{{ $cell['day'] }}</div>
 
                                         @foreach($calendar->getEvents($cell['date_id']) as $event)
-                                            <div><span class="fa{{ $event->getClasses() }}"></span> {{ $event->value }}</div>
+                                            <div>
+                                                <a href="" onclick="return false;" data-toggle="tooltip" data-placement="top" title="{{ $event->name }}">
+                                                    <span class="fa{{ $event->getClasses() }}"></span> {{ $event->value }}
+                                                </a>
+                                            </div>
                                         @endforeach
 
                                         @if($balance = $calendar->getBalance($cell['date_id']))

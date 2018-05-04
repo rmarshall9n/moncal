@@ -6,14 +6,15 @@ use Carbon\Carbon;
 
 class Event
 {
-    public $name;
     public $date;
     public $value;
+    public $name;
 
-    public function __construct($date, $value)
+    public function __construct($date, $value, $name = "")
     {
         $this->date = Carbon::parse($date);;
         $this->value = $value;
+        $this->name = $name;
     }
 
     public function dateId()
