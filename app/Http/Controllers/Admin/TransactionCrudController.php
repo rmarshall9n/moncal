@@ -83,6 +83,40 @@ class TransactionCrudController extends CrudController
         // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
         // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
 
+        // ------ CRUD FILTERS
+        $this->crud->addFilter([ // dropdown filter
+            'name' => 'direction',
+            'type' => 'dropdown',
+            'label'=> 'Direction'
+        ], [
+            2 => 'Expense',
+            3 => 'Income',
+        ], function($value) { // if the filter is active
+
+            switch ($value) {
+                case 1:
+                    $this->crud->addClause('where', 'amount', '>', '0');
+                    break;
+                case 2:
+                    $this->crud->addClause('where', 'amount', '<=', '0');
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $this->crud->addFilter([ // daterange filter
+           'type' => 'date_range',
+           'name' => 'from_to',
+           'label'=> 'Date range'
+         ],
+         false,
+         function($value) { // if the filter is active, apply these constraints
+           $dates = json_decode($value);
+           $this->crud->addClause('where', 'made_on', '>=', $dates->from);
+           $this->crud->addClause('where', 'made_on', '<=', $dates->to);
+         });
+
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
         // $this->crud->addButton($stack, $name, $type, $content, $position); // add a button; possible types are: view, model_function

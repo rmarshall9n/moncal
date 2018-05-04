@@ -53,7 +53,7 @@
                                         <div class="date">{{ $cell['day'] }}</div>
 
                                         @foreach($calendar->getEvents($cell['date_id']) as $event)
-                                            <div><span class="fa {{ $event->value > 0 ? 'fa-arrow-right text-success' : 'fa-arrow-left text-danger' }}"></span> {{ $event->value }}</div>
+                                            <div><span class="fa{{ $event->getClasses() }}"></span> {{ $event->value }}</div>
                                         @endforeach
 
                                         @if($balance = $calendar->getBalance($cell['date_id']))
@@ -72,5 +72,4 @@
         </div>
     </div>
 
-    @dump($calendar)
 @endsection

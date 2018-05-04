@@ -20,4 +20,9 @@ class Event
     {
         return $this->date->format('Ymd');
     }
+
+    public function getClasses()
+    {
+        return $this->value > 0 ? ' fa-arrow-right text-success' : ' fa-arrow-left text-danger';
+    }
 }
