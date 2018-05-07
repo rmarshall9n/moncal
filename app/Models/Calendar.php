@@ -32,6 +32,11 @@ class Calendar
         $this->display = in_array($display, ['d', 'w', 'm', 'y']) ? $display : 'm';
     }
 
+    public function dateId()
+    {
+        return $this->date->format('Ymd');
+    }
+
     public function navigate($action)
     {
         if ($action == 'today') {

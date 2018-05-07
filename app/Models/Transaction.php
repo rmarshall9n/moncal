@@ -53,8 +53,10 @@ class Transaction extends Model implements Eventable
         return new Event($this->made_on, $this->amount, $this->name);
     }
 
-    public static function getCumulativeBalances($startDate, $endDate)
+    public static function getCumulativeBalances($startDate, $endDate, $userId = null)
     {
+        $userId = $userId ?? \Auth::id();
+
         return \DB::table('transactions')
             ->select(\DB::raw('distinct(transactions.made_on), sum(cumulative.amount) as balance'))
             ->leftJoin('transactions as cumulative', function($join) {
@@ -62,10 +64,8 @@ class Transaction extends Model implements Eventable
                 $join->on('cumulative.user_id', '=', \DB::raw(\Auth::id()));
             })
             ->groupBy('transactions.id')
-            ->where([
-                ['transactions.made_on', '>=', $startDate],
-                ['transactions.made_on', '<=', $endDate],
-            ])
+            ->whereBetween('transactions.made_on', [$startDate, $endDate])
+            // ->where('transactions.user_id', $userId)
             ->orderBy('transactions.made_on')
             ->get();
     }
@@ -80,6 +80,11 @@ class Transaction extends Model implements Eventable
     | SCOPES
     |--------------------------------------------------------------------------
     */
+
+    public function scopeForUser($query, $userId = null)
+    {
+        return $query->where('user_id', $userId ?? \Auth::id());
+    }
 
     /*
     |--------------------------------------------------------------------------

@@ -146,7 +146,7 @@ class RecurringTransactionCrudController extends CrudController
         // $this->crud->enableExportButtons();
 
         // ------ ADVANCED QUERIES
-        // $this->crud->addClause('active');
+        $this->crud->addClause('forUser');
         // $this->crud->addClause('type', 'car');
         // $this->crud->addClause('where', 'name', '==', 'car');
         // $this->crud->addClause('whereName', 'car');

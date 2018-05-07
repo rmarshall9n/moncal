@@ -20,9 +20,10 @@ class CalendarController extends \App\Http\Controllers\Controller
         $calendar->navigate($request->get('navigate'));
         $calendar->setupDates();
 
-        $transactions = Transaction::where([
-                ['transactions.made_on', '>=', $calendar->start_date],
-                ['transactions.made_on', '<=', $calendar->end_date],
+        $transactions = Transaction::forUser()
+            ->whereBetween('transactions.made_on', [
+                $calendar->start_date,
+                $calendar->end_date
             ])
             ->get();
 
