@@ -19,6 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->decimal('amount');
             $table->dateTime('made_on');
             $table->integer('user_id');
+            $table->integer('account_id');
             $table->integer('recurring_transaction_id')->nullable();
             $table->timestamps();
         });

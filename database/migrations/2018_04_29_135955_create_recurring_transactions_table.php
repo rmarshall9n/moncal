@@ -23,6 +23,7 @@ class CreateRecurringTransactionsTable extends Migration
             $table->integer('num_repeats');
             $table->dateTime('end_on')->nullable();
             $table->integer('user_id');
+            $table->integer('account_id');
             $table->softDeletes();
             $table->timestamps();
         });

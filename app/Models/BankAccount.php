@@ -53,6 +53,10 @@ class BankAccount extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function scopeForUser($query, $userId = null)
+    {
+        return $query->where('user_id', $userId ?? \Auth::id());
+    }
     /*
     |--------------------------------------------------------------------------
     | ACCESORS

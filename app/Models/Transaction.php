@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Event;
 use App\Interfaces\Eventable;
 use Backpack\CRUD\CrudTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model implements Eventable
@@ -69,6 +70,14 @@ class Transaction extends Model implements Eventable
             ->orderBy('transactions.made_on')
             ->get();
     }
+
+    public static function getCurrentBalance()
+    {
+        return self::where('made_on', '<=', Carbon::now()->endOfDay())
+            ->where('user_id', \Auth::id())
+            ->sum('amount');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

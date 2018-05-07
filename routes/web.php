@@ -15,11 +15,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::group(['middleware' => ['admin'], 'namespace' => 'Admin'], function() {
-   CRUD::resource('transaction', 'TransactionCrudController');
-   CRUD::resource('recurring-transaction', 'RecurringTransactionCrudController');
-   CRUD::resource('bank-account', 'BankAccountCrudController');
 
-   Route::get('calendar', 'CalendarController@index')->name('calendar');
+    Route::get('dashboard', 'DashboardController@index');
+    Route::get('calendar', 'CalendarController@index')->name('calendar');
+
+    CRUD::resource('transaction', 'TransactionCrudController');
+    CRUD::resource('recurring-transaction', 'RecurringTransactionCrudController');
+    CRUD::resource('bank-account', 'BankAccountCrudController');
+
+
+    Route::post('update-balance', 'DashboardController@storeUpdatedBalance')->name('update-balance.store');
 });

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use App\Models\RecurringTransaction;
 use App\Models\Calendar;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class CalendarController extends \App\Http\Controllers\Controller
+class CalendarController extends Controller
 {
     public function index(Request $request)
     {
