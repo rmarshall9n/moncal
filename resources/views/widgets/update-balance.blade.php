@@ -20,7 +20,7 @@
                 <label>New Balance</label>
                 <div class="input-group">
                     <div class="input-group-addon">£</div>
-                    <input type="number" name="updated_balance" class="form-control">
+                    <input type="number" name="updated_balance" class="form-control" step="0.01">
                  </div>
             </div>
 

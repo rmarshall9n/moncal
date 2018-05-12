@@ -14,7 +14,7 @@
                     @foreach($accounts as $account)
                         <tr>
                             <td>{{ $account->name }}</td>
-                            <td>{{ $account->getCurrentBalance() }}</td>
+                            <td>{{ Formatter::toMoney($account->getCurrentBalance()) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

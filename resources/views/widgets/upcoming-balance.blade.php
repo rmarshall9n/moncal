@@ -18,7 +18,7 @@
                             <td>{{ $account->name }}</td>
 
                             @foreach($dates as $date)
-                                <td>{{ $account->getBalanceOn($date) }}</td>
+                                <td>{{ Formatter::toMoney($account->getBalanceOn($date)) }}</td>
                             @endforeach
 
                         </tr>

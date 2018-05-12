@@ -27,8 +27,8 @@ class TransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255',
-            'amount' => ['required', new Currency],
+            'name' => 'required|min:3|max:255',
+            'amount' => ['required','numeric','min:-999999999.9999','max:999999999.9999', new Currency],
             'made_on' => 'required',
         ];
     }

@@ -47,7 +47,10 @@ class TransactionCrudController extends CrudController
             'name' => 'amount',
             'label' => 'Amount',
             'type' => 'number',
-            'prefix' => '£',
+            'prefix' => config('app.currency_symbol', '£'),
+            'attributes' => [
+                'step' => \Formatter::toStep(config('app.currency_decimals', 2))
+            ],
             'min' => 1,
         ]);
 
@@ -77,7 +80,7 @@ class TransactionCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'amount',
+            'name' => 'amount_formatted',
             'label' => 'Amount',
             'type' => 'text',
         ]);

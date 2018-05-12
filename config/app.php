@@ -2,6 +2,10 @@
 
 return [
 
+    'currency_symbol' => '$',
+
+    'currency_decimals' => 4,
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -209,7 +213,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Formatter' => App\Helpers\Formatter::class,
     ],
 
 ];

@@ -57,13 +57,13 @@
                                         @foreach($calendar->getEvents($cell['date_id']) as $event)
                                             <div>
                                                 <a href="" onclick="return false;" data-toggle="tooltip" data-placement="top" title="{{ $event->name }}">
-                                                    <span class="fa{{ $event->getClasses() }}"></span> {{ $event->value }}
+                                                    <span class="fa{{ $event->getClasses() }}"></span> {{ Formatter::toMoneyShort($event->value) }}
                                                 </a>
                                             </div>
                                         @endforeach
 
                                         @if($balance = $calendar->getBalance($cell['date_id']))
-                                            <div class="total">{{ $balance->value }}</div>
+                                            <div class="total">{{ Formatter::toMoneyShort($balance->value) }}</div>
                                         @endisset
 
                                     </div>

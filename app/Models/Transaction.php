@@ -112,4 +112,9 @@ class Transaction extends Model implements Eventable
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+    public function getAmountFormattedAttribute()
+    {
+        return \Formatter::toMoney($this->amount);
+    }
+
 }

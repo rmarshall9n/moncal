@@ -16,7 +16,7 @@ class CreateRecurringTransactionsTable extends Migration
         Schema::create('recurring_transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->decimal('amount');
+            $table->decimal('amount', 13, 4);
             $table->dateTime('start_on');
             $table->integer('repeat_increment');
             $table->string('repeat_type');

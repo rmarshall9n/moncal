@@ -15,7 +15,7 @@ class Currency implements Rule
      */
     public function passes($attribute, $value)
     {
-        return preg_match('/^-?\d*(\.\d{2})?$/', $value);
+        return preg_match('/^-?\d*(\.\d{'.config('app.currency_decimals', 2).'})?$/', $value);
     }
 
     /**
@@ -25,6 +25,6 @@ class Currency implements Rule
      */
     public function message()
     {
-        return 'The field should be a valid currency e.g. 1000.99.';
+        return 'The field should be a valid currency e.g. 1000' . \Formatter::toStep(config('app.currency_decimals', 2)) . '.';
     }
 }

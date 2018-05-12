@@ -141,4 +141,8 @@ class RecurringTransaction extends Model
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+    public function getAmountFormattedAttribute()
+    {
+        return \Formatter::toMoney($this->amount);
+    }
 }

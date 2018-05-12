@@ -46,6 +46,10 @@ class RecurringTransactionCrudController extends CrudController
             'name' => 'amount',
             'label' => 'Amount',
             'type' => 'number',
+            'prefix' => config('app.currency_symbol', '£'),
+            'attributes' => [
+                'step' => \Formatter::toStep(config('app.currency_decimals', 2))
+            ],
         ]);
 
         $this->crud->addField([
@@ -64,17 +68,18 @@ class RecurringTransactionCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'name' => 'repeat_type',
             'label' => "Repeat Type",
-            'type' => 'select_from_array',
+            'type' => 'radio',
+            'name' => 'repeat_type',
             'options' => [
                 'd' => 'Day',
                 'w' => 'Week',
                 'm' => 'Month',
                 'y' => 'Year',
             ],
-            'allows_null' => false,
+            // 'allows_null' => false,
             'default' => 'm',
+            'inline' => true,
         ]);
 
         $this->crud->addField([
@@ -104,26 +109,26 @@ class RecurringTransactionCrudController extends CrudController
 
         // ------ CRUD COLUMNS
         $this->crud->addColumn([
-            'name' => 'name',
             'label' => 'Name',
+            'name' => 'name',
         ]);
 
         $this->crud->addColumn([
-            'name' => 'amount',
             'label' => 'Amount',
             'type' => 'number',
+            'name' => 'amount_formatted',
         ]);
 
         $this->crud->addColumn([
-            'name' => 'start_on',
             'label' => 'Start On',
             'type' => 'date',
+            'name' => 'start_on',
         ]);
 
         $this->crud->addColumn([
-            'name' => 'bank_account_id',
             'label' => 'Bank Account',
             'type' => 'select',
+            'name' => 'bank_account_id',
             'entity' => 'bankAccount',
             'attribute' => 'name',
             'model' => BankAccount::class,
