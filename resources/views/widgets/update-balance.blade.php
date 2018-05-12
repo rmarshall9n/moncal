@@ -9,7 +9,7 @@
 
             <div class="form-group col-xs-12">
                 <label>Account</label>
-                <select name="account_id" class="form-control">
+                <select name="bank_account_id" class="form-control">
                     @foreach($accounts as $account)
                         <option value="{{ $account->id }}">{{ $account->name }}</option>
                     @endforeach

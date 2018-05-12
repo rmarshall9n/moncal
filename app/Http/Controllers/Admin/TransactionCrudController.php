@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
-// VALIDATION: change the requests to match your own file names if you need form validation
+use App\Models\BankAccount;
 use App\Http\Requests\TransactionRequest as StoreRequest;
 use App\Http\Requests\TransactionRequest as UpdateRequest;
 
@@ -12,7 +12,6 @@ class TransactionCrudController extends CrudController
 {
     public function setup()
     {
-
         /*
         |--------------------------------------------------------------------------
         | BASIC CRUD INFORMATION
@@ -56,8 +55,19 @@ class TransactionCrudController extends CrudController
             'name' => 'made_on',
             'label' => 'Date',
             'type' => 'date_picker',
+            'date_picker_options' => [
+                'todayHighlight' => true,
+            ],
         ]);
 
+        $this->crud->addField([
+            'label' => 'Bank Account',
+            'type' => 'select2',
+            'name' => 'bank_account_id',
+            'entity' => 'bankAccount',
+            'attribute' => 'name',
+            'model' => BankAccount::class,
+        ]);
 
         // ------ CRUD COLUMNS
         $this->crud->addColumn([
@@ -77,11 +87,15 @@ class TransactionCrudController extends CrudController
             'label' => 'Date',
             'type' => 'date',
         ]);
-        // $this->crud->addColumns(); // add multiple columns, at the end of the stack
-        // $this->crud->removeColumn('column_name'); // remove a column from the stack
-        // $this->crud->removeColumns(['column_name_1', 'column_name_2']); // remove an array of columns from the stack
-        // $this->crud->setColumnDetails('column_name', ['attribute' => 'value']); // adjusts the properties of the passed in column (by name)
-        // $this->crud->setColumnsDetails(['column_1', 'column_2'], ['attribute' => 'value']);
+
+        $this->crud->addColumn([
+            'name' => 'bank_account_id',
+            'label' => 'Bank Account',
+            'type' => 'select',
+            'entity' => 'bankAccount',
+            'attribute' => 'name',
+            'model' => BankAccount::class,
+        ]);
 
         // ------ CRUD FILTERS
         $this->crud->addFilter([ // dropdown filter
@@ -117,6 +131,15 @@ class TransactionCrudController extends CrudController
            $this->crud->addClause('where', 'made_on', '<=', $dates->to);
          });
 
+        $this->crud->addFilter([ // select2 filter
+          'name' => 'bank_account_id',
+          'type' => 'select2',
+          'label'=> 'Bank Account'
+        ], function() {
+            return BankAccount::forUser()->get()->pluck('name', 'id')->toArray();
+        }, function($bank_account_id) {
+            $this->crud->addClause('where', 'bank_account_id', $bank_account_id);
+        });
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
         // $this->crud->addButton($stack, $name, $type, $content, $position); // add a button; possible types are: view, model_function

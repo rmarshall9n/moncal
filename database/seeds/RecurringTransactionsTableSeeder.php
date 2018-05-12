@@ -11,6 +11,5 @@ class RecurringTransactionsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
     }
 }

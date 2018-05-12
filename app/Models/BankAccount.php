@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use App\Models\Transaction;
 use Backpack\CRUD\CrudTrait;
+use Illuminate\Database\Eloquent\Model;
 
 class BankAccount extends Model
 {
@@ -46,22 +48,39 @@ class BankAccount extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
     | SCOPES
     |--------------------------------------------------------------------------
     */
-
     public function scopeForUser($query, $userId = null)
     {
         return $query->where('user_id', $userId ?? \Auth::id());
     }
+
     /*
     |--------------------------------------------------------------------------
     | ACCESORS
     |--------------------------------------------------------------------------
     */
+    public function getCurrentBalance()
+    {
+        return $this->transactions()
+            ->whereDate('made_on', '<', Carbon::tomorrow())
+            ->sum('amount');
+    }
+
+    public function getBalanceOn($date)
+    {
+        return $this->transactions()
+            ->whereDate('made_on', '<', $date)
+            ->sum('amount');
+    }
 
     /*
     |--------------------------------------------------------------------------

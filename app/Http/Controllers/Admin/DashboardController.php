@@ -14,11 +14,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
-
-        return view('vendor.backpack.base.dashboard', compact('someVar'));
+        return view('vendor.backpack.base.dashboard');
     }
-
 
     public function storeUpdatedBalance(Request $request)
     {
@@ -27,7 +24,7 @@ class DashboardController extends Controller
         $transaction->made_on = Carbon::now();
         $transaction->user_id = \Auth::id();
         $transaction->amount = $request->updated_balance - Transaction::getCurrentBalance();
-        $transaction->account_id = $request->account_id;
+        $transaction->bank_account_id = $request->bank_account_id;
 
         $transaction->save();
 

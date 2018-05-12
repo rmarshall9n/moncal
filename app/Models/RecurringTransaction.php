@@ -29,6 +29,7 @@ class RecurringTransaction extends Model
         'repeat_type',
         'num_repeats',
         'end_on',
+        'bank_account_id',
     ];
     // protected $hidden = [];
     protected $dates = [
@@ -85,7 +86,7 @@ class RecurringTransaction extends Model
         $transaction->amount = $this->amount;
         $transaction->made_on = $made_on->format('Y-m-d H:i:s');
         $transaction->user_id = $this->user_id;
-        // $transaction->account_id = $this->account_id;
+        $transaction->bank_account_id = $this->bank_account_id;
         $transaction->recurring_transaction_id = $this->id;
         return $transaction;
     }
@@ -113,6 +114,10 @@ class RecurringTransaction extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function bankAccount()
+    {
+        return $this->belongsTo(BankAccount::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

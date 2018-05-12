@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Models\Event;
+use App\Models\BankAccount;
 use App\Interfaces\Eventable;
 use Backpack\CRUD\CrudTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+
 
 class Transaction extends Model implements Eventable
 {
@@ -27,6 +29,7 @@ class Transaction extends Model implements Eventable
         'amount',
         'made_on',
         'user_id',
+        'bank_account_id',
     ];
     // protected $hidden = [];
     protected $dates = [
@@ -83,13 +86,16 @@ class Transaction extends Model implements Eventable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function bankAccount()
+    {
+        return $this->belongsTo(BankAccount::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
     | SCOPES
     |--------------------------------------------------------------------------
     */
-
     public function scopeForUser($query, $userId = null)
     {
         return $query->where('user_id', $userId ?? \Auth::id());

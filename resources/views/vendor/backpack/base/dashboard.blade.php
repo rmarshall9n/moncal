@@ -18,5 +18,13 @@
         <div class="col-md-6">
             @include('widgets.update-balance')
         </div>
+        <div class="col-md-6">
+            @include('widgets.current-balance')
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @include('widgets.upcoming-balance')
+        </div>
     </div>
 @endsection

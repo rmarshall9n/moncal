@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\BankAccount;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-
-// VALIDATION: change the requests to match your own file names if you need form validation
 use App\Http\Requests\RecurringTransactionRequest as StoreRequest;
 use App\Http\Requests\RecurringTransactionRequest as UpdateRequest;
 
@@ -52,7 +51,10 @@ class RecurringTransactionCrudController extends CrudController
         $this->crud->addField([
             'name' => 'start_on',
             'label' => 'Start On',
-            'type' => 'date_picker'
+            'type' => 'date_picker',
+            'date_picker_options' => [
+                'todayHighlight' => true,
+            ],
         ]);
 
         $this->crud->addField([
@@ -85,7 +87,19 @@ class RecurringTransactionCrudController extends CrudController
         $this->crud->addField([
             'name' => 'end_on',
             'label' => 'End On',
-            'type' => 'date_picker'
+            'type' => 'date_picker',
+            'date_picker_options' => [
+                'todayHighlight' => true,
+            ],
+        ]);
+
+        $this->crud->addField([
+            'label' => 'Bank Account',
+            'type' => 'select2',
+            'name' => 'bank_account_id',
+            'entity' => 'bankAccount',
+            'attribute' => 'name',
+            'model' => BankAccount::class,
         ]);
 
         // ------ CRUD COLUMNS
@@ -103,8 +117,28 @@ class RecurringTransactionCrudController extends CrudController
         $this->crud->addColumn([
             'name' => 'start_on',
             'label' => 'Start On',
-            'type' => 'datetime'
+            'type' => 'date',
         ]);
+
+        $this->crud->addColumn([
+            'name' => 'bank_account_id',
+            'label' => 'Bank Account',
+            'type' => 'select',
+            'entity' => 'bankAccount',
+            'attribute' => 'name',
+            'model' => BankAccount::class,
+        ]);
+
+        // ------ CRUD FILTERS
+        $this->crud->addFilter([ // select2 filter
+          'name' => 'bank_account_id',
+          'type' => 'select2',
+          'label'=> 'Bank Account'
+        ], function() {
+            return BankAccount::forUser()->get()->pluck('name', 'id')->toArray();
+        }, function($bank_account_id) {
+            $this->crud->addClause('where', 'bank_account_id', $bank_account_id);
+        });
 
         // ------ CRUD BUTTONS
         // possible positions: 'beginning' and 'end'; defaults to 'beginning' for the 'line' stack, 'end' for the others;
